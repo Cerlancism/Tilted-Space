@@ -51,48 +51,20 @@ public class PlayerControl : MonoBehaviour
     //---------------------------------------------------------------------------------
     protected void Update()
     {
-        if (true)
+        if (hasGyro)
         {
-            var gyroRotation = Input.gyro.rotationRateUnbiased;
-            if (Mathf.Abs(gameObject.transform.position.x) <= 2.5)
+            var gyroRotation = (new Quaternion(0.5f, 0.5f, -0.5f, 0.5f) * Input.gyro.attitude * new Quaternion(0, 0, 1, 0)).eulerAngles;
+            var screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+            Debug.Log(gyroRotation);
+            if (gyroRotation.y > 10 && gyroRotation.y < 45 && screenPosition.x < Camera.main.pixelWidth)
             {
-                if (Mathf.Abs(gyroRotation.x) > 0.1)
-                {
-                    gameObject.transform.Translate(Mathf.Sign(-gyroRotation.x) * Speed * Time.deltaTime, 0, 0);
-                }
+                transform.Translate(Speed, 0, 0);
             }
-            else
+            else if (gyroRotation.y < 350 && gyroRotation.y > 315 && screenPosition.x > 0)
             {
-                if (Mathf.Sign(gameObject.transform.position.x) == -1)
-                {
-                    gameObject.transform.Translate(0.01f, 0, 0);
-                }
-                else
-                {
-                    gameObject.transform.Translate(-0.01f, 0, 0);
-                }
-            }
-
-            if (Mathf.Abs(gameObject.transform.position.y) <= 4.5)
-            {
-                if (Mathf.Abs(gyroRotation.y) > 0.1)
-                {
-                    gameObject.transform.Translate(0, Mathf.Sign(-gyroRotation.y) * Speed * Time.deltaTime, 0);
-                }
-            }
-            else
-            {
-                if (Mathf.Sign(gameObject.transform.position.y) == -1)
-                {
-                    gameObject.transform.Translate(0, 0.01f, 0);
-                }
-                else
-                {
-                    gameObject.transform.Translate(0, -0.01f, 0);
-                }
+                transform.Translate(-Speed, 0, 0);
             }
         }
-
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
             Vector3 touchPosition = Input.GetTouch(0).deltaPosition;
@@ -113,5 +85,45 @@ public class PlayerControl : MonoBehaviour
     //---------------------------------------------------------------------------------
     protected void OnDestroy()
     {
+    }
+}
+
+public static class DeviceRotation
+{
+    private static bool gyroInitialized = false;
+
+    public static bool HasGyroscope
+    {
+        get
+        {
+            return SystemInfo.supportsGyroscope;
+        }
+    }
+
+    public static Quaternion Get()
+    {
+        if (!gyroInitialized)
+        {
+            InitGyro();
+        }
+
+        return HasGyroscope
+            ? ReadGyroscopeRotation()
+            : Quaternion.identity;
+    }
+
+    private static void InitGyro()
+    {
+        if (HasGyroscope)
+        {
+            Input.gyro.enabled = true;                // enable the gyroscope
+            Input.gyro.updateInterval = 0.0167f;    // set the update interval to it's highest value (60 Hz)
+        }
+        gyroInitialized = true;
+    }
+
+    private static Quaternion ReadGyroscopeRotation()
+    {
+        return new Quaternion(0.5f, 0.5f, -0.5f, 0.5f) * Input.gyro.attitude * new Quaternion(0, 0, 1, 0);
     }
 }
