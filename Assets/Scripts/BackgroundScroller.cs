@@ -21,6 +21,7 @@ public class BackgroundScroller : MonoBehaviour
 	// Private Variables
 	//===================
 	private bool repeated = false;
+    private Vector2 skySize;
 	
 	//---------------------------------------------------------------------------------
 	// protected mono methods. 
@@ -38,7 +39,7 @@ public class BackgroundScroller : MonoBehaviour
 	//---------------------------------------------------------------------------------
 	protected void Start() 
 	{
-
+        skySize = GetMaxBounds(gameObject).size;
     }
 	
 	//---------------------------------------------------------------------------------
@@ -50,7 +51,7 @@ public class BackgroundScroller : MonoBehaviour
         if (transform.position.y < -2.5 && repeated == false)
         {
             repeated = true;
-            GameObject replaced = Instantiate(gameObject, transform.position + (transform.up * 12.8f), transform.rotation);
+            GameObject replaced = Instantiate(gameObject, transform.position + (transform.up * skySize.y), transform.rotation);
             replaced.name = "SkyBackground(Replaced)";
         }
         if (transform.position.y < -20)
@@ -72,4 +73,14 @@ public class BackgroundScroller : MonoBehaviour
 	protected void OnDestroy()
 	{
 	}
+
+    private Bounds GetMaxBounds(GameObject g)
+    {
+        var b = new Bounds(g.transform.position, Vector3.zero);
+        foreach (Renderer r in g.GetComponentsInChildren<Renderer>())
+        {
+            b.Encapsulate(r.bounds);
+        }
+        return b;
+    }
 }

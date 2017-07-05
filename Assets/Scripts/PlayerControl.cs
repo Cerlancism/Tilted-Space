@@ -16,12 +16,17 @@ public class PlayerControl : MonoBehaviour
     //===================
     // Public Variables
     //===================
+    public enum ControlOption { TiltRoll, TiltSlide };
+    public ControlOption ControlType = ControlOption.TiltRoll;
     public float Speed;
+    public float RollSpeed;
+    public float SlideSpeed;
 
     //===================
     // Private Variables
     //===================
     private bool hasGyro = false;
+    private Vector2 lerpPosition;
 
     //---------------------------------------------------------------------------------
     // protected mono methods. 
@@ -44,6 +49,7 @@ public class PlayerControl : MonoBehaviour
             hasGyro = true;
             Input.gyro.enabled = true;
         }
+        lerpPosition = transform.position;
     }
 
     //---------------------------------------------------------------------------------
@@ -53,24 +59,93 @@ public class PlayerControl : MonoBehaviour
     {
         if (hasGyro)
         {
-            var gyroRotation = (new Quaternion(0.5f, 0.5f, -0.5f, 0.5f) * Input.gyro.attitude * new Quaternion(0, 0, 1, 0)).eulerAngles;
-            var screenPosition = Camera.main.WorldToScreenPoint(transform.position);
-            Debug.Log(gyroRotation);
-            if (gyroRotation.y > 10 && gyroRotation.y < 45 && screenPosition.x < Camera.main.pixelWidth)
+            var gyroRotation = Input.gyro.rotationRateUnbiased;
+            var screenPosition = Camera.main.WorldToViewportPoint(transform.position);
+            var lerpScreenPosition = Camera.main.WorldToViewportPoint(lerpPosition);
+            lerpPosition.x = lerpPosition.x + gyroRotation.y * Speed;
+            lerpPosition.y = lerpPosition.y + -gyroRotation.x * Speed / 9 * 16;
+            switch (ControlType)
             {
-                transform.Translate(Speed, 0, 0);
-            }
-            else if (gyroRotation.y < 350 && gyroRotation.y > 315 && screenPosition.x > 0)
-            {
-                transform.Translate(-Speed, 0, 0);
+                case ControlOption.TiltRoll:
+                    if (screenPosition.x > 0 && screenPosition.x < 1)
+                    {
+                        transform.position = Vector2.Lerp(transform.position, new Vector2(lerpPosition.x, transform.position.y), RollSpeed);
+                    }
+                    else if (lerpScreenPosition.x > 0 && lerpScreenPosition.x < 1)
+                    {
+                        transform.position = Vector2.Lerp(transform.position, new Vector2(lerpPosition.x, transform.position.y), RollSpeed);
+                    }
+                    if (screenPosition.y > 0 && screenPosition.y < 1)
+                    {
+                        transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, lerpPosition.y), RollSpeed);
+                    }
+                    else if (lerpScreenPosition.y > 0 && lerpScreenPosition.y < 1)
+                    {
+                        transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, lerpPosition.y), RollSpeed);
+                    }
+                    if (Input.touchCount == 2)
+                    {
+                        Vector2 touchPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(1).position);
+                        if (Input.GetTouch(1).phase == TouchPhase.Moved)
+                        {
+                            Vector2 deltaPosition = Input.GetTouch(1).deltaPosition;
+                            lerpPosition.x = lerpPosition.x + deltaPosition.x * 0.01f;
+                            lerpPosition.y = lerpPosition.y + deltaPosition.y * 0.01f;
+                        }
+                    }
+                    break;
+                case ControlOption.TiltSlide:
+                    if (Mathf.Abs(gyroRotation.x) < 0.1 && Mathf.Abs(gyroRotation.y) < 0.1 && (lerpPosition - Vector2.zero).magnitude < 1)
+                    {
+                        lerpPosition = Vector2.Lerp(lerpPosition, Vector2.zero, 0.05f);
+                    }
+
+                    if (screenPosition.x > 0 && screenPosition.x < 1)
+                    {
+                        transform.position = new Vector2(transform.position.x + lerpPosition.x * SlideSpeed, transform.position.y);
+                    }
+                    else
+                    {
+                        if (screenPosition.x < 0 && lerpPosition.x > 0)
+                        {
+                            transform.position = new Vector2(transform.position.x + lerpPosition.x * SlideSpeed, transform.position.y);
+                        }
+                        if (screenPosition.x > 1 && lerpPosition.x < 0)
+                        {
+                            transform.position = new Vector2(transform.position.x + lerpPosition.x * SlideSpeed, transform.position.y);
+                        }
+                    }
+
+                    if (Input.touchCount == 2)
+                    {
+                        lerpPosition = Vector2.zero;
+                    }
+
+                    if (screenPosition.y > 0 && screenPosition.y < 1)
+                    {
+                        transform.position = new Vector2(transform.position.x, transform.position.y + lerpPosition.y * SlideSpeed);
+                    }
+                    else
+                    {
+                        if (screenPosition.y < 0 && lerpPosition.y > 0)
+                        {
+                            transform.position = new Vector2(transform.position.x, transform.position.y + lerpPosition.y * SlideSpeed);
+                        }
+                        if (screenPosition.y > 1 && lerpPosition.y < 0)
+                        {
+                            transform.position = new Vector2(transform.position.x, transform.position.y + lerpPosition.y * SlideSpeed);
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        {
-            Vector3 touchPosition = Input.GetTouch(0).deltaPosition;
-            Debug.Log(Camera.main.ScreenToWorldPoint(touchPosition).x);
-            gameObject.transform.Translate(Camera.main.ScreenToWorldPoint(touchPosition).x + 2.8125f, Camera.main.ScreenToWorldPoint(touchPosition).y + 5f, 0);
-        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(lerpPosition, 1);
     }
 
     //---------------------------------------------------------------------------------
@@ -85,45 +160,5 @@ public class PlayerControl : MonoBehaviour
     //---------------------------------------------------------------------------------
     protected void OnDestroy()
     {
-    }
-}
-
-public static class DeviceRotation
-{
-    private static bool gyroInitialized = false;
-
-    public static bool HasGyroscope
-    {
-        get
-        {
-            return SystemInfo.supportsGyroscope;
-        }
-    }
-
-    public static Quaternion Get()
-    {
-        if (!gyroInitialized)
-        {
-            InitGyro();
-        }
-
-        return HasGyroscope
-            ? ReadGyroscopeRotation()
-            : Quaternion.identity;
-    }
-
-    private static void InitGyro()
-    {
-        if (HasGyroscope)
-        {
-            Input.gyro.enabled = true;                // enable the gyroscope
-            Input.gyro.updateInterval = 0.0167f;    // set the update interval to it's highest value (60 Hz)
-        }
-        gyroInitialized = true;
-    }
-
-    private static Quaternion ReadGyroscopeRotation()
-    {
-        return new Quaternion(0.5f, 0.5f, -0.5f, 0.5f) * Input.gyro.attitude * new Quaternion(0, 0, 1, 0);
     }
 }
