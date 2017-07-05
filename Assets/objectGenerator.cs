@@ -13,9 +13,7 @@ using System.Collections;
 //---------------------------------------------------------------------------------
 public class objectGenerator : MonoBehaviour
 {
-    //===================
-    // Public Variables
-    //===================
+
     public ObjectPool[] theObjectPools;
 
     public GameObject Object;
@@ -30,9 +28,13 @@ public class objectGenerator : MonoBehaviour
     private int ObjectSelector;
     private float[] ObjectWidths;
 
-    //===================
-    // Private Variables
-    //===================
+    //set height change and max/min height
+    private float MinHeight;
+    private float Maxheight;
+    public Transform maxHeightPoint;
+    public float MaxHeightChange;
+    private float heightChange;
+
     private bool repeated = false;
     private float ObjectWidth;
 
@@ -51,7 +53,7 @@ public class objectGenerator : MonoBehaviour
     //---------------------------------------------------------------------------------
     // Start is when blah blah
     //---------------------------------------------------------------------------------
-    protected void Start()
+    void Start()
     {
         ObjectWidths = new float[theObjectPools.Length];
 
@@ -60,37 +62,41 @@ public class objectGenerator : MonoBehaviour
             ObjectWidths[i] = theObjectPools[i].pooledObject.GetComponent<BoxCollider2D>().size.x;
         }
 
+        MinHeight = transform.position.y;
+        Maxheight = maxHeightPoint.position.y;
+
     }
 
     //---------------------------------------------------------------------------------
     // XXX is when blah blah
     //---------------------------------------------------------------------------------
-    protected void Update()
+    void Update()
     {
-        if (transform.position.x < generationPoint.position.x)
-        {
-            //making selection of platforms vary in type and height
-            distanceBetween = Random.Range(distancebetweenMin, distancebetweenMax);
-            ObjectSelector = Random.Range(0, theObjectPools.Length);
+            if (transform.position.x < generationPoint.position.x)
+            {
+                //making selection of platforms vary in type and height
+                distanceBetween = Random.Range(distancebetweenMin, distancebetweenMax);
+                ObjectSelector = Random.Range(0, theObjectPools.Length);
 
-            GameObject newObject = theObjectPools[ObjectSelector].GetPooledObject();
+                //setting max and min height
+                heightChange = transform.position.y + Random.Range(MaxHeightChange, -MaxHeightChange);
+                if (heightChange > Maxheight)
+                {
+                    heightChange = Maxheight;
+                }
+                else if (heightChange < MinHeight)
+                {
+                    heightChange = MinHeight;
+                }
 
-            transform.position = new Vector3(transform.position.x + (ObjectWidths[ObjectSelector]) + distanceBetween, transform.position.y, transform.position.z);
+                GameObject newPlatform = theObjectPools[ObjectSelector].GetPooledObject();
 
-        }
-    }
+                //set new platform position for respawn
+                newPlatform.transform.position = transform.position;
+                newPlatform.transform.rotation = transform.rotation;
+                newPlatform.SetActive(true);
 
-    //---------------------------------------------------------------------------------
-    // FixedUpdate for Physics update
-    //---------------------------------------------------------------------------------
-    protected void FixedUpdate()
-    {
-    }
-
-    //---------------------------------------------------------------------------------
-    // XXX is when blah blah
-    //---------------------------------------------------------------------------------
-    protected void OnDestroy()
-    {
+                transform.position = new Vector3(transform.position.x + (ObjectWidths[ObjectSelector] / 2) + distanceBetween, heightChange, transform.position.z);
+            }
     }
 }

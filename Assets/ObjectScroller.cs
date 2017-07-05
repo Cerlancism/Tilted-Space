@@ -1,9 +1,8 @@
 ﻿//#define LOG_TRACE_INFO
 //#define LOG_EXTRA_INFO
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 //---------------------------------------------------------------------------------
 // Author		: XXX
@@ -12,22 +11,21 @@ using UnityEngine;
 // Modified Date: 2015-05-12
 // Description	: This is where you write a summary of what the role of this file.
 //---------------------------------------------------------------------------------
-public class ObjectPool : MonoBehaviour
+public class ObjectScroller : MonoBehaviour
 {
-    //===================
-    // Public Variables
-    //===================
-    public GameObject pooledObject;
-
-    public int pooledAmount;
-
-    public List<GameObject> pooledObjects;
 
     private bool repeated = false;
 
-    //===================
-    // Private Variables
-    //===================
+    //randomise distance between objects
+    private float distanceBetween;
+    private float distancebetweenMin = -10;
+    private float distancebetweenMax = 10;
+
+    //randomise rotation of objects 
+    private float tiltAngle;
+    private float maxtiltAngle = 10;
+    private float mintiltAngle = -10;
+
 
     //---------------------------------------------------------------------------------
     // protected mono methods. 
@@ -43,33 +41,11 @@ public class ObjectPool : MonoBehaviour
     //---------------------------------------------------------------------------------
     // Start is when blah blah
     //---------------------------------------------------------------------------------
-    void Start()
+    protected void Start()
     {
-        pooledObjects = new List<GameObject>();
-
-        for (int i = 0; i < pooledAmount; i++)
-        {
-            GameObject obj = (GameObject)Instantiate(pooledObject);
-            pooledObjects.Add(obj);
-        }
-    }
-
-    //take a random platform out of the pool
-    public GameObject GetPooledObject()
-    {
-        for (int i = 0; i < pooledObjects.Count; i++)
-        {
-            if (!pooledObjects[i].activeInHierarchy)
-            {
-                return pooledObjects[i];
-            }
-        }
-
-        //return platform from pool
-        GameObject obj = (GameObject)Instantiate(pooledObject);
-        obj.SetActive(false);
-        pooledObjects.Add(obj);
-        return obj;
+        var euler = transform.eulerAngles;
+        euler.z = Random.Range(-20f,20f);
+        transform.eulerAngles = euler;
     }
 
     //---------------------------------------------------------------------------------
@@ -77,12 +53,15 @@ public class ObjectPool : MonoBehaviour
     //---------------------------------------------------------------------------------
     protected void Update()
     {
-        transform.Translate(Vector2.down / 10);
-        if (transform.position.y < -2.5 && repeated == false)
+        distanceBetween = Random.Range(distancebetweenMin, distancebetweenMax);
+        tiltAngle = Random.Range(mintiltAngle, maxtiltAngle);
+        transform.Translate(Vector2.down / Random.Range(15f,20f));
+        if (transform.position.y < -6 && repeated == false)
         {
             repeated = true;
+            transform.position = new Vector3(transform.position.x / 2 + distanceBetween, transform.position.y, transform.position.z);
             GameObject replaced = Instantiate(gameObject, transform.position + (transform.up * 12.8f), transform.rotation);
-            replaced.name = "SkyBackground(Replaced)";
+            replaced.name = "BackgroundObject(Replaced)";
         }
         if (transform.position.y < -20)
         {
