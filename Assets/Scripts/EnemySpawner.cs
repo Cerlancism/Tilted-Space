@@ -12,6 +12,12 @@ public class EnemySpawner : MonoBehaviour {
 
     public Transform asteroid;
     public float chancePerSecond = 1;
+    public float asteroidTorqueMin = -50;
+    public float asteroidTorqueMax = 50;
+    public Vector2 asteroidForceMin = new Vector2(-200, -200);
+    public Vector2 asteroidForceMax = new Vector2(200, -500);
+    public float asteroidSizeMin = 1;
+    public float asteroidSizeMax = 3;
 
 	// Use this for initialization
 	void Start () {
@@ -26,9 +32,16 @@ public class EnemySpawner : MonoBehaviour {
                 if (Random.value < chancePerSecond * Time.deltaTime)
                 {
                     // Spawn asteroid
-                    Instantiate(asteroid, new Vector3(
+                    Transform newAsteroid = (Transform) Instantiate(asteroid, new Vector3(
                         Random.Range(transform.position.x - height / 2, transform.position.x + height / 2),
                         transform.position.y + height / 2, enemyZ), Quaternion.Euler(0, 0, Random.Range(0, 360)));
+
+                    float size = Random.Range(asteroidSizeMin, asteroidSizeMax);
+                    newAsteroid.localScale = new Vector3(size, size, 1);
+
+                    Rigidbody2D rb = newAsteroid.gameObject.GetComponent<Rigidbody2D>();
+                    rb.AddForce(new Vector2(Random.Range(asteroidForceMin.x, asteroidForceMax.x), Random.Range(asteroidForceMin.y, asteroidForceMax.y)));
+                    rb.AddTorque(Random.Range(asteroidTorqueMin, asteroidTorqueMax));
                 }
                 break;
         }
