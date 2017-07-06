@@ -51,6 +51,7 @@ public class PlayerControl : MonoBehaviour
         {
             hasGyro = true;
             Input.gyro.enabled = true;
+            Input.gyro.updateInterval = 1f / 60f;
         }
         lerpPosition = transform.position;
         origin = Input.acceleration * 90;
