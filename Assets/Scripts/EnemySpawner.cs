@@ -10,12 +10,12 @@ public class EnemySpawner : MonoBehaviour {
     public float width;
     public float height;
 
-    public Transform asteroid;
+    public Transform[] asteroids;
     public float chancePerSecond = 1;
     public float asteroidTorqueMin = -50;
     public float asteroidTorqueMax = 50;
-    public Vector2 asteroidForceMin = new Vector2(-200, -200);
-    public Vector2 asteroidForceMax = new Vector2(200, -500);
+    public Vector2 asteroidForceMin = new Vector2(-200, 200);
+    public Vector2 asteroidForceMax = new Vector2(200, 500);
     public float asteroidSizeMin = 1;
     public float asteroidSizeMax = 3;
 
@@ -32,8 +32,8 @@ public class EnemySpawner : MonoBehaviour {
                 if (Random.value < chancePerSecond * Time.deltaTime)
                 {
                     // Spawn asteroid
-                    Transform newAsteroid = (Transform) Instantiate(asteroid, new Vector3(
-                        Random.Range(transform.position.x - height / 2, transform.position.x + height / 2),
+                    Transform newAsteroid = (Transform) Instantiate(RandomSelect(asteroids), new Vector3(
+                        Random.Range(transform.position.x - width / 2, transform.position.x + width / 2),
                         transform.position.y + height / 2, enemyZ), Quaternion.Euler(0, 0, Random.Range(0, 360)));
 
                     float size = Random.Range(asteroidSizeMin, asteroidSizeMax);
@@ -51,5 +51,10 @@ public class EnemySpawner : MonoBehaviour {
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 1));
+    }
+
+    Object RandomSelect(Object[] array)
+    {
+        return array[Random.Range(0, array.Length - 1)];
     }
 }
