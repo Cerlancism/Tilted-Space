@@ -14,10 +14,10 @@ public class UIcontrols : MonoBehaviour
     //Start button code
     protected void Start()
     {
-        PauseCanvas.enabled = false;
         HowtoplayCanvas.enabled = false;
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
+        PauseCanvas.enabled = false;
     }
 
     public void Startgame()
