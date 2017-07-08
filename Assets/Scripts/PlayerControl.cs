@@ -24,6 +24,8 @@ public class PlayerControl : MonoBehaviour
 
     public static bool Shaked;
 
+    public CameraControl screenShake;
+
     //===================
     // Private Variables
     //===================
@@ -202,5 +204,15 @@ public class PlayerControl : MonoBehaviour
     //---------------------------------------------------------------------------------
     protected void OnDestroy()
     {
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            Debug.Log("hit");
+            screenShake.ShakeCamera(0.05f, 1);
+            Handheld.Vibrate();
+        }
     }
 }
