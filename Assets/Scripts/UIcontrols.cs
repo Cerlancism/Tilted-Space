@@ -5,17 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class UIcontrols : MonoBehaviour
 {
-
-
-    public GameObject PauseUI;
+    public Canvas PauseCanvas;
     public Canvas HowtoplayCanvas;
     public Canvas OptionsCanvas;
     public Canvas CreditsCanvas;
     private bool paused = false;
-    
+
     //Start button code
     protected void Start()
     {
+        PauseCanvas.enabled = false;
         HowtoplayCanvas.enabled = false;
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
@@ -44,7 +43,7 @@ public class UIcontrols : MonoBehaviour
     }
 
     //back button code
-    public void Back()
+    public void Menu()
     {
         SceneManager.LoadScene(0);
     }
@@ -52,33 +51,28 @@ public class UIcontrols : MonoBehaviour
     //resume button code
     public void Resume()
     {
-        paused = false;
+        PauseCanvas.enabled = !PauseCanvas.enabled;
+        Time.timeScale = 1;
     }
 
-    //pause button 
+
+    //back button code
     public void Pause()
     {
-        paused = true;
-    }
-
-    //Menu button code
-    public void Menu()
-    {
-        SceneManager.LoadScene(0);
+        PauseCanvas.enabled = !PauseCanvas.enabled;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (paused)
+        if (PauseCanvas.enabled)
         {
-            PauseUI.SetActive(true);
+
             Time.timeScale = 0;
         }
 
-        if (!paused)
+        if (!PauseCanvas.enabled)
         {
-            PauseUI.SetActive(false);
             Time.timeScale = 1;
         }
     }
