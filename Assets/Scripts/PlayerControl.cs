@@ -1,27 +1,31 @@
-﻿//#define LOG_TRACE_INFO
-//#define LOG_EXTRA_INFO
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 //---------------------------------------------------------------------------------
-// Author		: XXX
-// Date  		: 2015-05-12
-// Modified By	: YYY
-// Modified Date: 2015-05-12
-// Description	: This is where you write a summary of what the role of this file.
+// Author		: Chen Yu
+// Date  		: 2017-07-01
+// Description	: Controls the player movement and firing
 //---------------------------------------------------------------------------------
 public class PlayerControl : MonoBehaviour
 {
     //===================
     // Public Variables
     //===================
-    public enum ControlOption { TiltRoll, TiltSlide };
-    public ControlOption ControlType = ControlOption.TiltRoll;
+    //Movement
+    public enum ControlOption { ROLL, SLIDE };
+    public ControlOption ControlType = ControlOption.ROLL;
     public float Speed;
     public float RollSpeed;
     public float SlideSpeed;
 
+    //Firing
+    public GameObject LaserBeam;
+    public enum FireLevel {LEVEL1, LEVEL2, LEVEL3 };
+    public FireLevel FirePower = FireLevel.LEVEL1;
+    public float FireSpeed;
+
+
+    //Additional Device Input
     public static bool Shaked;
 
     //===================
@@ -31,20 +35,6 @@ public class PlayerControl : MonoBehaviour
     private Vector2 lerpPosition;
     private Vector2 origin = Vector2.zero;
 
-    //---------------------------------------------------------------------------------
-    // protected mono methods. 
-    // Unity5: Rigidbody, Collider, Audio and other Components need to use GetComponent<name>()
-    //---------------------------------------------------------------------------------
-    //---------------------------------------------------------------------------------
-    // Awake is when the file is just loaded ... for other function blah blah
-    //---------------------------------------------------------------------------------
-    protected void Awake()
-    {
-    }
-
-    //---------------------------------------------------------------------------------
-    // Start is when blah blah
-    //---------------------------------------------------------------------------------
     protected void Start()
     {
         if (SystemInfo.supportsGyroscope)
@@ -55,11 +45,33 @@ public class PlayerControl : MonoBehaviour
         }
         lerpPosition = transform.position;
         origin = Input.acceleration * 90;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+        InvokeRepeating("Fire", 0, FireSpeed);
     }
 
-    //---------------------------------------------------------------------------------
-    // XXX is when blah blah
-    //---------------------------------------------------------------------------------
+    void Fire()
+    {
+        switch (FirePower)
+        {
+            case FireLevel.LEVEL1:
+                Instantiate(LaserBeam, transform.position, Quaternion.identity);
+                break;
+            case FireLevel.LEVEL2:
+                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.1f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.1f, transform.position.y), Quaternion.identity);
+                break;
+            case FireLevel.LEVEL3:
+                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.1f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.1f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.3f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.3f, transform.position.y), Quaternion.identity);
+                break;
+            default:
+                break;
+        }
+    }
+
     protected void Update()
     {
         Shaked = false;
@@ -104,7 +116,7 @@ public class PlayerControl : MonoBehaviour
         }
         switch (ControlType)
         {
-            case ControlOption.TiltRoll:
+            case ControlOption.ROLL:
                 if (screenPosition.x > 0 && screenPosition.x < 1)
                 {
                     transform.position = Vector2.Lerp(transform.position, new Vector2(lerpPosition.x, transform.position.y), RollSpeed);
@@ -134,7 +146,7 @@ public class PlayerControl : MonoBehaviour
                     }
                 }
                 break;
-            case ControlOption.TiltSlide:
+            case ControlOption.SLIDE:
                 if (Mathf.Abs(gyroRotation.x) < 0.1 && Mathf.Abs(gyroRotation.y) < 0.1 && (lerpPosition - Vector2.zero).magnitude < 1)
                 {
                     lerpPosition = Vector2.Lerp(lerpPosition, Vector2.zero, 0.05f);
@@ -181,8 +193,6 @@ public class PlayerControl : MonoBehaviour
             default:
                 break;
         }
-
-
     }
 
     private void OnDrawGizmos()
@@ -190,16 +200,10 @@ public class PlayerControl : MonoBehaviour
         Gizmos.DrawSphere(lerpPosition, 0.1f);
     }
 
-    //---------------------------------------------------------------------------------
-    // FixedUpdate for Physics update
-    //---------------------------------------------------------------------------------
     protected void FixedUpdate()
     {
     }
 
-    //---------------------------------------------------------------------------------
-    // XXX is when blah blah
-    //---------------------------------------------------------------------------------
     protected void OnDestroy()
     {
     }
