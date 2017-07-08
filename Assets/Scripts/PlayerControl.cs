@@ -20,12 +20,15 @@ public class PlayerControl : MonoBehaviour
 
     //Firing
     public GameObject LaserBeam;
+    public GameObject Rocket;
     public enum FireLevel {LEVEL1, LEVEL2, LEVEL3 };
     public FireLevel FirePower = FireLevel.LEVEL1;
     public float FireSpeed;
+    public float RocketCooldown;
 
     //Sound
     public AudioClip LaserSFX;
+    public AudioClip RocketLaunchSFX;
     public AudioClip ExplodeSFX;
 
 
@@ -41,6 +44,7 @@ public class PlayerControl : MonoBehaviour
     private Vector2 lerpPosition;
     private Vector2 origin = Vector2.zero;
     private AudioSource SFX;
+    private float rocketCurrentCD;
 
     protected void Start()
     {
@@ -58,33 +62,13 @@ public class PlayerControl : MonoBehaviour
         InvokeRepeating("Fire", 0, FireSpeed);
 
         SFX = GetComponent<AudioSource>();
-    }
 
-    void Fire()
-    {
-        SFX.PlayOneShot(LaserSFX, 1);
-        switch (FirePower)
-        {
-            case FireLevel.LEVEL1:
-                Instantiate(LaserBeam, transform.position, Quaternion.identity);
-                break;
-            case FireLevel.LEVEL2:
-                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.1f, transform.position.y), Quaternion.identity);
-                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.1f, transform.position.y), Quaternion.identity);
-                break;
-            case FireLevel.LEVEL3:
-                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.1f, transform.position.y), Quaternion.identity);
-                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.1f, transform.position.y), Quaternion.identity);
-                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.3f, transform.position.y), Quaternion.identity);
-                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.3f, transform.position.y), Quaternion.identity);
-                break;
-            default:
-                break;
-        }
+        rocketCurrentCD = 0;
     }
 
     protected void Update()
     {
+        rocketCurrentCD = (rocketCurrentCD > 0) ? rocketCurrentCD - Time.deltaTime : 0;
         Shaked = false;
         Vector2 screenPosition = Camera.main.WorldToViewportPoint(transform.position);
         Vector2 lerpScreenPosition = Camera.main.WorldToViewportPoint(lerpPosition);
@@ -200,6 +184,53 @@ public class PlayerControl : MonoBehaviour
                         transform.position = new Vector2(transform.position.x, transform.position.y + lerpPosition.y * SlideSpeed);
                     }
                 }
+                break;
+            default:
+                break;
+        }
+
+        //Fire Rocket if shaked
+        if (Shaked && CanFireRocket())
+        {
+            rocketCurrentCD = RocketCooldown;
+            SFX.PlayOneShot(RocketLaunchSFX, 1f);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.2f, 0, 10)), Quaternion.identity);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.3f, 0, 10)), Quaternion.identity);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.4f, 0, 10)), Quaternion.identity);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0, 10)), Quaternion.identity);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.6f, 0, 10)), Quaternion.identity);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.7f, 0, 10)), Quaternion.identity);
+            Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.8f, 0, 10)), Quaternion.identity);
+            Shaked = false;
+        }
+    }
+
+    private bool CanFireRocket()
+    {
+        if (rocketCurrentCD == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    void Fire()
+    {
+        SFX.PlayOneShot(LaserSFX, 1);
+        switch (FirePower)
+        {
+            case FireLevel.LEVEL1:
+                Instantiate(LaserBeam, transform.position, Quaternion.identity);
+                break;
+            case FireLevel.LEVEL2:
+                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.1f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.1f, transform.position.y), Quaternion.identity);
+                break;
+            case FireLevel.LEVEL3:
+                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.1f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.1f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x - 0.3f, transform.position.y), Quaternion.identity);
+                Instantiate(LaserBeam, new Vector2(transform.position.x + 0.3f, transform.position.y), Quaternion.identity);
                 break;
             default:
                 break;

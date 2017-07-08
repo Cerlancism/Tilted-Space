@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserBeamScript : MonoBehaviour {
+public class ProjectileScript : MonoBehaviour {
 
     // === Public Variables ====
     public float Speed;
@@ -38,6 +38,17 @@ public class LaserBeamScript : MonoBehaviour {
             rb.velocity = new Vector2 (0, 0);
             gameObject.GetComponent<Animator>().SetTrigger("Hit");
             Destroy(gameObject, gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            SFX.PlayOneShot(SFX.clip, 0.8f);
+            rb.velocity = new Vector2(0, 0);
+            gameObject.GetComponent<Animator>().SetTrigger("Explode");
+            Destroy(gameObject, gameObject.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0).Length);
         }
     }
 }
