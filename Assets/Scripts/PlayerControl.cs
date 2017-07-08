@@ -210,9 +210,9 @@ public class PlayerControl : MonoBehaviour
     {
     }
 
-    void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             Debug.Log("hit");
             screenShake.ShakeCamera(0.05f, 1);
