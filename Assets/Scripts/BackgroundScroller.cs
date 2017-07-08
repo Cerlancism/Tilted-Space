@@ -47,14 +47,14 @@ public class BackgroundScroller : MonoBehaviour
     //---------------------------------------------------------------------------------
     protected void Update()
     {
-        transform.Translate(Vector2.down / 10);
-        if (transform.position.y < -2.5 && repeated == false)
+        transform.Translate(Vector2.down / 15 * Time.deltaTime * 60);
+        if (Camera.main.WorldToViewportPoint(transform.position).y < 2.5 && repeated == false)
         {
             repeated = true;
             GameObject replaced = Instantiate(gameObject, transform.position + (transform.up * skySize.y), transform.rotation);
             replaced.name = "SkyBackground(Replaced)";
         }
-        if (transform.position.y < -20)
+        if (Camera.main.WorldToViewportPoint(transform.position).y  < -2.5f)
         {
             Destroy(gameObject);
         }

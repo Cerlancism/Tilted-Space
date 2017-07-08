@@ -33,6 +33,7 @@ public class CameraControl : MonoBehaviour
     private void Update()
     {
         // only update lookahead pos if accelerating or changed direction
+
         float xMoveDelta = (target.position - m_LastTargetPosition).x;
 
         //set camera look ahead and follow
@@ -50,7 +51,15 @@ public class CameraControl : MonoBehaviour
         Vector3 aheadTargetPos = target.position + m_LookAheadPos + Vector3.forward * m_OffsetZ;
         Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
 
-        transform.position = newPos;
+        if (transform.position.x > -4 && transform.position.x < 4 &&
+            transform.position.y > -5 && transform.position.y < 5)
+        {
+            transform.position = newPos;
+        }
+        else
+        {
+            transform.position = newPos * 0.985f;
+        }
 
         m_LastTargetPosition = target.position;
 
