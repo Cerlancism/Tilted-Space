@@ -24,11 +24,15 @@ public class PlayerControl : MonoBehaviour
     public FireLevel FirePower = FireLevel.LEVEL1;
     public float FireSpeed;
 
+    //Sound
+    public AudioClip LaserSFX;
+    public AudioClip ExplodeSFX;
+
 
     //Additional Device Input
     public static bool Shaked;
 
-    public CameraControl screenShake;
+    private CameraControl screenShake;
 
     //===================
     // Private Variables
@@ -36,9 +40,11 @@ public class PlayerControl : MonoBehaviour
     private bool hasGyro = false;
     private Vector2 lerpPosition;
     private Vector2 origin = Vector2.zero;
+    private AudioSource SFX;
 
     protected void Start()
     {
+        screenShake = Camera.main.GetComponent<CameraControl>();
         if (SystemInfo.supportsGyroscope)
         {
             hasGyro = true;
@@ -50,10 +56,13 @@ public class PlayerControl : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         InvokeRepeating("Fire", 0, FireSpeed);
+
+        SFX = GetComponent<AudioSource>();
     }
 
     void Fire()
     {
+        SFX.PlayOneShot(LaserSFX, 1);
         switch (FirePower)
         {
             case FireLevel.LEVEL1:
@@ -214,6 +223,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
+            SFX.PlayOneShot(ExplodeSFX, 0.8f);
             Debug.Log("hit");
             screenShake.ShakeCamera(0.05f, 1);
             Handheld.Vibrate();
