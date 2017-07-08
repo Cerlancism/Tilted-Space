@@ -8,22 +8,24 @@ public class EnemySpawner : MonoBehaviour {
     public State state = State.IDLE;
 
     public float enemyZ = -1;
-    public float width;
-    public float height;
 
     public Transform[] asteroids;
     public float asteroidChancePerSecond = 1;
     public float asteroidTorqueMin = -50;
     public float asteroidTorqueMax = 50;
-    public Vector2 asteroidForceMin = new Vector2(-300, -200);
-    public Vector2 asteroidForceMax = new Vector2(300, 500);
+    public float asteroidForceMin = 200;
+    public float asteroidForceMax = 500;
     public float asteroidSizeMin = 1;
     public float asteroidSizeMax = 3;
+    public float asteroidSpawnRadius;
+    public Vector2 asteroidTargetSize;
     public float asteroidDuration = 10;
     public State asteroidNextState = State.GREEN_UFO;
 
     public Transform greenUFO;
     public float greenUFOChancePerSecond = 1;
+    public float greenUFOSpawnRadius;
+    public Vector2 greenUFOTargetSize;
     public float greenUFODuration = 10;
     public State greenUFONextState = State.IDLE;
 
@@ -42,16 +44,24 @@ public class EnemySpawner : MonoBehaviour {
             case State.ASTEROID:
                 if (Random.value < asteroidChancePerSecond * Time.deltaTime)
                 {
-                    // Spawn asteroid
-                    Transform newAsteroid = (Transform) Instantiate(RandomSelect(asteroids), new Vector3(
-                        Random.Range(transform.position.x - width / 2, transform.position.x + width / 2),
-                        transform.position.y + height, enemyZ), Quaternion.Euler(0, 0, Random.Range(0, 360)));
+                    // Spawn somewhere on the spawn circle (blue circle)
+                    // newPosition is based around 0,0
+                    Vector2 newPosition = Random.insideUnitCircle.normalized * asteroidSpawnRadius;
+                    Transform newAsteroid = (Transform) Instantiate(RandomSelect(asteroids),
+                        transform.position + new Vector3(newPosition.x, newPosition.y, enemyZ), 
+                        Quaternion.Euler(0, 0, Random.Range(0, 360)));
 
+                    // Random size
                     float size = Random.Range(asteroidSizeMin, asteroidSizeMax);
                     newAsteroid.localScale = new Vector3(size, size, 1);
 
+                    // Add random torque
+                    // Add random force towards target position, which is a random point inside the target boundaries (green box)
                     Rigidbody2D rb = newAsteroid.gameObject.GetComponent<Rigidbody2D>();
-                    rb.AddForce(new Vector2(Random.Range(asteroidForceMin.x, asteroidForceMax.x), Random.Range(asteroidForceMin.y, asteroidForceMax.y)));
+                    Vector2 targetPosition = new Vector2(
+                        Random.Range(-asteroidTargetSize.x / 2, asteroidTargetSize.x / 2), 
+                        Random.Range(-asteroidTargetSize.y / 2, asteroidTargetSize.y / 2));
+                    rb.AddForce((targetPosition - newPosition).normalized * Random.Range(asteroidForceMin, asteroidForceMax));
                     rb.AddTorque(Random.Range(asteroidTorqueMin, asteroidTorqueMax));
                 }
 
@@ -63,7 +73,7 @@ public class EnemySpawner : MonoBehaviour {
 
                 break;
 
-            case State.GREEN_UFO:
+            /*case State.GREEN_UFO:
                 if (Random.value < greenUFOChancePerSecond * Time.deltaTime)
                 {
                     // Spawn green UFO
@@ -78,14 +88,19 @@ public class EnemySpawner : MonoBehaviour {
                     ChangeState(greenUFONextState);
                 }
 
-                break;
+                break;*/
         }
 	}
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(new Vector3(-width / 2, height, 0), new Vector3(width / 2, height, 0));
+        Gizmos.DrawWireSphere(transform.position, asteroidSpawnRadius);
+        Gizmos.DrawWireSphere(transform.position, greenUFOSpawnRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position, new Vector3(asteroidTargetSize.x, asteroidTargetSize.y, 1));
+        Gizmos.DrawWireCube(transform.position, new Vector3(greenUFOTargetSize.x, greenUFOTargetSize.y, 1));
     }
 
     Object RandomSelect(Object[] array)
