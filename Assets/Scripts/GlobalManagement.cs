@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GlobalManagement : MonoBehaviour {
 
@@ -28,5 +29,6 @@ public class GlobalManagement : MonoBehaviour {
     public static void ChangeScore(int Value)
     {
         Score = Score + Value;
+        GameObject.Find("Score").GetComponent<Text>().text = "SCORE: " + Score.ToString().PadLeft(6, '0');
     }
 }
