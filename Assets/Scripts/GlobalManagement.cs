@@ -24,9 +24,12 @@ public class GlobalManagement : MonoBehaviour
             HighScore = PlayerPrefs.GetInt("Highscore");
             GameObject.Find("Highscore").GetComponent<Text>().text = "Highscore: " + HighScore.ToString().PadLeft(6, '0');
         }
-
-        Master = GetComponent<AudioMixer>();
-
+        if (PlayerPrefs.HasKey("MasterVol"))
+        {
+            PlayerPrefs.GetFloat("MasterVol");
+            PlayerPrefs.GetFloat("MusicVol");
+            PlayerPrefs.GetFloat("SFXVol");
+        }
     }
 
     // Update is called once per frame
@@ -37,13 +40,6 @@ public class GlobalManagement : MonoBehaviour
             HighScore = Score;
             GameObject.Find("Highscore").GetComponent<Text>().text = "Highscore: " + Score.ToString().PadLeft(6, '0');
             PlayerPrefs.SetInt("Highscore", Score);
-        }
-
-        if (PlayerPrefs.HasKey("Master"))
-        {
-            PlayerPrefs.GetFloat("MasterVol");
-            PlayerPrefs.GetFloat("MusicVol");
-            PlayerPrefs.GetFloat("SFXVol");
         }
 
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIcontrols : MonoBehaviour
 {
@@ -17,6 +18,16 @@ public class UIcontrols : MonoBehaviour
     protected void Start()
     {
         HowtoplayCanvas.enabled = false;
+        try
+        {
+            GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
+            GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
+            GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
         PauseCanvas.enabled = false;

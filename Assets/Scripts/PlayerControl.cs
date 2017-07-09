@@ -70,7 +70,7 @@ public class PlayerControl : MonoBehaviour
 
         rocketCurrentCD = 0;
 
-        if (PlayerPrefs.HasKey("Master"))
+        if (PlayerPrefs.HasKey("MasterVol"))
         {
             PlayerPrefs.GetFloat("MasterVol");
             PlayerPrefs.GetFloat("MusicVol");
