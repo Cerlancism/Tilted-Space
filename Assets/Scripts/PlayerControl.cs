@@ -35,8 +35,8 @@ public class PlayerControl : MonoBehaviour
 
     //Additional Device Input
     public static bool Shaked;
-
     private CameraControl screenShake;
+    public UIcontrols uicontrols;
 
     //===================
     // Private Variables
@@ -269,8 +269,11 @@ public class PlayerControl : MonoBehaviour
             GameObject.Find("Life "+hitdetect).SetActive(false);
             Debug.Log("hit");
             screenShake.ShakeCamera(0.05f, 1);
-            Handheld.Vibrate();
             hitdetect++;
+            if(uicontrols.vibratecheck == true)
+            {
+            Handheld.Vibrate();
+            }
         }
     }
 }

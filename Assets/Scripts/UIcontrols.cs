@@ -10,6 +10,7 @@ public class UIcontrols : MonoBehaviour
     public Canvas OptionsCanvas;
     public Canvas CreditsCanvas;
     private bool paused = false;
+    public bool vibratecheck = true;
 
     //Start button code
     protected void Start()
@@ -60,6 +61,11 @@ public class UIcontrols : MonoBehaviour
     public void Pause()
     {
         PauseCanvas.enabled = !PauseCanvas.enabled;
+    }
+
+    public void VibrateCheck()
+    {
+        vibratecheck = !vibratecheck;
     }
 
     // Update is called once per frame
