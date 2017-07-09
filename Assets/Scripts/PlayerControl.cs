@@ -65,6 +65,14 @@ public class PlayerControl : MonoBehaviour
         SFX = GetComponent<AudioSource>();
 
         rocketCurrentCD = 0;
+
+        if (PlayerPrefs.HasKey("Master"))
+        {
+            PlayerPrefs.GetFloat("MasterVol");
+            PlayerPrefs.GetFloat("MusicVol");
+            PlayerPrefs.GetFloat("SFXVol");
+        }
+
     }
 
     protected void Update()
