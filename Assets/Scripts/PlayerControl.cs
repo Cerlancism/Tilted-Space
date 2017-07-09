@@ -77,6 +77,9 @@ public class PlayerControl : MonoBehaviour
 
     protected void Update()
     {
+        if (Time.timeScale == 0)
+            return;
+
         rocketCurrentCD = (rocketCurrentCD > 0) ? rocketCurrentCD - Time.deltaTime : 0;
         Shaked = false;
         Vector2 screenPosition = Camera.main.WorldToViewportPoint(transform.position);
