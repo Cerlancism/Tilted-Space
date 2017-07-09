@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 //---------------------------------------------------------------------------------
@@ -32,6 +33,9 @@ public class PlayerControl : MonoBehaviour
     public AudioClip RocketLaunchSFX;
     public AudioClip ExplodeSFX;
 
+    //Health
+    public int health = 3;
+    public Image[] healthGUI;
 
     //Additional Device Input
     public static bool Shaked;
@@ -268,14 +272,25 @@ public class PlayerControl : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            SFX.PlayOneShot(ExplodeSFX, 0.8f);
-            GameObject.Find("Life "+hitdetect).SetActive(false);
             Debug.Log("hit");
+
+            // Play effects
+            SFX.PlayOneShot(ExplodeSFX, 0.8f);
             screenShake.ShakeCamera(0.05f, 1);
-            hitdetect++;
             if(uicontrols.vibratecheck == true)
             {
-            Handheld.Vibrate();
+                Handheld.Vibrate();
+            }
+
+            // Decrease health
+            health--;
+            healthGUI[health].enabled = false;
+
+            // Die if necessary
+            if (health <= 0)
+            {
+                uicontrols.Die();
+                Destroy(gameObject);
             }
         }
     }

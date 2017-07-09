@@ -9,6 +9,7 @@ public class UIcontrols : MonoBehaviour
     public Canvas HowtoplayCanvas;
     public Canvas OptionsCanvas;
     public Canvas CreditsCanvas;
+    public Canvas DeathCanvas;
     private bool paused = false;
     public bool vibratecheck = true;
 
@@ -19,6 +20,7 @@ public class UIcontrols : MonoBehaviour
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
         PauseCanvas.enabled = false;
+        DeathCanvas.enabled = false;
     }
 
     public void Startgame()
@@ -66,6 +68,12 @@ public class UIcontrols : MonoBehaviour
     public void VibrateCheck()
     {
         vibratecheck = !vibratecheck;
+    }
+
+    // Death code
+    public void Die()
+    {
+        DeathCanvas.enabled = true;
     }
 
     // Update is called once per frame
