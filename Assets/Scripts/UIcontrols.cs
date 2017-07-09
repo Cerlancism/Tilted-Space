@@ -49,6 +49,11 @@ public class UIcontrols : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
     //resume button code
     public void Resume()
     {

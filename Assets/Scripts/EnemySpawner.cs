@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour {
+public class EnemySpawner : MonoBehaviour
+{
     private float timePassedSinceLastStateChange = 0;
     public enum State { IDLE, ASTEROID, GREEN_UFO, BLUE_UFO };
     public State state = State.IDLE;
@@ -38,12 +39,14 @@ public class EnemySpawner : MonoBehaviour {
     public State blueUFONextState = State.BLUE_UFO;
 
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         // Update time
         timePassedSinceLastStateChange += Time.deltaTime;
 
@@ -56,19 +59,19 @@ public class EnemySpawner : MonoBehaviour {
                     // newPosition is based around 0,0
                     Vector2 newPosition = Random.insideUnitCircle.normalized * asteroidSpawnRadius;
                     Transform newAsteroid = Instantiate(RandomSelect(asteroids),
-                        transform.position + new Vector3(newPosition.x, newPosition.y, enemyZ), 
+                        transform.position + new Vector3(newPosition.x, newPosition.y, enemyZ),
                         Quaternion.Euler(0, 0, Random.Range(0, 360))).transform;
 
                     // Random size and hitpoints based on size
                     float size = Random.Range(asteroidSizeMin, asteroidSizeMax);
                     newAsteroid.localScale = new Vector3(size, size, 1);
-                    newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints = (int) ((float)newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints * size);
+                    newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints = (int)((float)newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints * size);
 
                     // Add random torque
                     // Add random force towards target position, which is a random point inside the target boundaries (green box)
                     Rigidbody2D rb = newAsteroid.gameObject.GetComponent<Rigidbody2D>();
                     Vector2 targetPosition = new Vector2(
-                        Random.Range(-asteroidTargetSize.x / 2, asteroidTargetSize.x / 2), 
+                        Random.Range(-asteroidTargetSize.x / 2, asteroidTargetSize.x / 2),
                         Random.Range(-asteroidTargetSize.y / 2, asteroidTargetSize.y / 2));
                     rb.AddForce((targetPosition - newPosition).normalized * Random.Range(asteroidForceMin, asteroidForceMax));
                     rb.AddTorque(Random.Range(asteroidTorqueMin, asteroidTorqueMax));
@@ -127,7 +130,7 @@ public class EnemySpawner : MonoBehaviour {
 
                 break;
         }
-	}
+    }
 
     void OnDrawGizmos()
     {

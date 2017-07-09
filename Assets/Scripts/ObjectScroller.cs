@@ -44,7 +44,7 @@ public class ObjectScroller : MonoBehaviour
     protected void Start()
     {
         var euler = transform.eulerAngles;
-        euler.z = Random.Range(-20f,20f);
+        euler.z = Random.Range(-20f, 20f);
         transform.eulerAngles = euler;
     }
 
@@ -55,7 +55,7 @@ public class ObjectScroller : MonoBehaviour
     {
         distanceBetween = Random.Range(distancebetweenMin, distancebetweenMax);
         tiltAngle = Random.Range(mintiltAngle, maxtiltAngle);
-        transform.Translate(Vector2.down / Random.Range(15f,20f));
+        transform.Translate(Vector2.down / Random.Range(15f, 20f));
         if (transform.position.y < -6 && repeated == false)
         {
             repeated = true;
