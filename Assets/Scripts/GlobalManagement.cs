@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
-public class GlobalManagement : MonoBehaviour {
+public class GlobalManagement : MonoBehaviour
+{
 
     // === Public Variables ====
     public static int Score = 0;
@@ -16,8 +17,8 @@ public class GlobalManagement : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () 
-	{
+    void Start()
+    {
         if (PlayerPrefs.HasKey("Highscore"))
         {
             HighScore = PlayerPrefs.GetInt("Highscore");
@@ -29,8 +30,8 @@ public class GlobalManagement : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () 
-	{
+    void Update()
+    {
         if (Score > HighScore)
         {
             HighScore = Score;
@@ -68,7 +69,7 @@ public class GlobalManagement : MonoBehaviour {
     }
 
     public void SetSFXlvl(float SFXlvl)
-    { 
+    {
         Master.SetFloat("SFXVol", SFXlvl);
         PlayerPrefs.SetFloat("SFXVol", SFXlvl);
         PlayerPrefs.Save();
