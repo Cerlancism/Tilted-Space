@@ -19,6 +19,7 @@ public class GlobalManagement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Score = 0;
         if (PlayerPrefs.HasKey("Highscore"))
         {
             HighScore = PlayerPrefs.GetInt("Highscore");
