@@ -17,14 +17,24 @@ public class GlobalManagement : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-        Score = 0;
-	}
-	
-	// Update is called once per frame
-	void Update () 
+        if (PlayerPrefs.HasKey("Highscore"))
+        {
+            HighScore = PlayerPrefs.GetInt("Highscore");
+            GameObject.Find("Highscore").GetComponent<Text>().text = "Highscore: " + HighScore.ToString().PadLeft(6, '0');
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update () 
 	{
-		
-	}
+        if (Score > HighScore)
+        {
+            HighScore = Score;
+            GameObject.Find("Highscore").GetComponent<Text>().text = "Highscore: " + Score.ToString().PadLeft(6, '0');
+            PlayerPrefs.SetInt("Highscore", Score);
+        }
+    }
 
     public static void ChangeScore(int Value)
     {

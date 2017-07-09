@@ -25,6 +25,7 @@ public class PlayerControl : MonoBehaviour
     public FireLevel FirePower = FireLevel.LEVEL1;
     public float FireSpeed;
     public float RocketCooldown;
+    public int hitdetect = 1;
 
     //Sound
     public AudioClip LaserSFX;
@@ -257,9 +258,11 @@ public class PlayerControl : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             SFX.PlayOneShot(ExplodeSFX, 0.8f);
+            GameObject.Find("Life "+hitdetect).SetActive(false);
             Debug.Log("hit");
             screenShake.ShakeCamera(0.05f, 1);
             Handheld.Vibrate();
+            hitdetect++;
         }
     }
 }
