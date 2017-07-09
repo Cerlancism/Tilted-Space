@@ -54,6 +54,7 @@ public class EnemySpawner : MonoBehaviour {
                     // Random size
                     float size = Random.Range(asteroidSizeMin, asteroidSizeMax);
                     newAsteroid.localScale = new Vector3(size, size, 1);
+                    newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints = (int) ((float)newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints * size);
 
                     // Add random torque
                     // Add random force towards target position, which is a random point inside the target boundaries (green box)

@@ -6,7 +6,7 @@ public class ProjectileScript : MonoBehaviour {
 
     // === Public Variables ====
     public float Speed;
-	
+    public int Damage;
 	
 	// === Private Variables ====
 	private Rigidbody2D rb;
@@ -37,7 +37,8 @@ public class ProjectileScript : MonoBehaviour {
             SFX.PlayOneShot(SFX.clip, 0.08f);
             rb.velocity = new Vector2 (0, 0);
             gameObject.GetComponent<Animator>().SetTrigger("Hit");
-            Destroy(gameObject, gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+            Destroy(gameObject, gameObject.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0).Length * 0.6f);
+            gameObject.GetComponent<Collider2D>().enabled = false;
         }
     }
 
@@ -47,8 +48,9 @@ public class ProjectileScript : MonoBehaviour {
         {
             SFX.PlayOneShot(SFX.clip, 0.8f);
             rb.velocity = new Vector2(0, 0);
-            gameObject.GetComponent<Animator>().SetTrigger("Explode");
+            gameObject.GetComponent<Animator>().SetTrigger("Hit");
             Destroy(gameObject, gameObject.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0).Length);
+            gameObject.GetComponent<Collider2D>().enabled = false;
         }
     }
 }
