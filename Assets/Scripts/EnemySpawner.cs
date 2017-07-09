@@ -24,10 +24,12 @@ public class EnemySpawner : MonoBehaviour {
 
     public Transform greenUFO;
     public float greenUFOChancePerSecond = 1;
+    public float greenUFOVelocityMin = 200;
+    public float greenUFOVelocityMax = 500;
     public float greenUFOSpawnRadius;
     public Vector2 greenUFOTargetSize;
     public float greenUFODuration = 10;
-    public State greenUFONextState = State.IDLE;
+    public State greenUFONextState = State.GREEN_UFO;
 
     // Use this for initialization
     void Start () {
@@ -51,7 +53,7 @@ public class EnemySpawner : MonoBehaviour {
                         transform.position + new Vector3(newPosition.x, newPosition.y, enemyZ), 
                         Quaternion.Euler(0, 0, Random.Range(0, 360)));
 
-                    // Random size
+                    // Random size and hitpoints based on size
                     float size = Random.Range(asteroidSizeMin, asteroidSizeMax);
                     newAsteroid.localScale = new Vector3(size, size, 1);
                     newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints = (int) ((float)newAsteroid.gameObject.GetComponent<EnemyHitPoint>().HitPoints * size);
@@ -74,22 +76,31 @@ public class EnemySpawner : MonoBehaviour {
 
                 break;
 
-            /*case State.GREEN_UFO:
+            case State.GREEN_UFO:
                 if (Random.value < greenUFOChancePerSecond * Time.deltaTime)
                 {
-                    // Spawn green UFO
-                    Transform newGreenUFO = (Transform) Instantiate(greenUFO, new Vector3(
-                        Random.Range(transform.position.x - width / 2, transform.position.x + width / 2),
-                        transform.position.y + height, enemyZ), Quaternion.Euler(0, 0, Random.Range(0, 360)));
+                    // Spawn somewhere on the spawn circle (blue circle)
+                    // newPosition is based around 0,0
+                    Vector2 newPosition = Random.insideUnitCircle.normalized * greenUFOSpawnRadius;
+                    Transform newGreenUFO = (Transform) Instantiate(greenUFO,
+                        transform.position + new Vector3(newPosition.x, newPosition.y, enemyZ),
+                        Quaternion.Euler(0, 0, Random.Range(0, 360)));
+
+                    // Set random velocity towards target position, which is a random point inside the target boundaries (green box)
+                    ConstantMover cm = newGreenUFO.gameObject.GetComponent<ConstantMover>();
+                    Vector2 targetPosition = new Vector2(
+                        Random.Range(-greenUFOTargetSize.x / 2, greenUFOTargetSize.x / 2),
+                        Random.Range(-greenUFOTargetSize.y / 2, greenUFOTargetSize.y / 2));
+                    cm.SetVelocity((targetPosition - newPosition).normalized * Random.Range(greenUFOVelocityMin, greenUFOVelocityMax));
                 }
 
                 // Change state if time up
-                if (timePassedSinceLastStateChange >= greenUFODuration)
+                if (timePassedSinceLastStateChange >= asteroidDuration)
                 {
-                    ChangeState(greenUFONextState);
+                    ChangeState(asteroidNextState);
                 }
 
-                break;*/
+                break;
         }
 	}
 
