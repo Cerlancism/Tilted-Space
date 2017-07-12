@@ -12,7 +12,7 @@ public class UIcontrols : MonoBehaviour
     public Canvas CreditsCanvas;
     public Canvas DeathCanvas;
     private bool paused = false;
-    public bool vibratecheck = true;
+    public bool vibratecheck;
 
     //Start button code
     protected void Start()
@@ -74,7 +74,6 @@ public class UIcontrols : MonoBehaviour
         Time.timeScale = 1;
     }
 
-
     //back button code
     public void Pause()
     {
@@ -83,7 +82,14 @@ public class UIcontrols : MonoBehaviour
 
     public void VibrateCheck()
     {
-        vibratecheck = !vibratecheck;
+        if (GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn)
+        {
+            PlayerPrefs.SetInt("Vibration", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Vibration", 0);
+        }
     }
 
     // Death code
@@ -96,14 +102,24 @@ public class UIcontrols : MonoBehaviour
     void Update()
     {
         if (PauseCanvas.enabled)
-        {
-
+        { 
             Time.timeScale = 0;
         }
-
+        
         if (!PauseCanvas.enabled)
         {
             Time.timeScale = 1;
+        }
+
+        if (PlayerPrefs.GetInt("Vibration") == 1)
+        {
+            vibratecheck = true;
+            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = true;
+        }
+        else
+        {
+            vibratecheck = false;
+            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
         }
     }
 
