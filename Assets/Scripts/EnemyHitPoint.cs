@@ -32,6 +32,7 @@ public class EnemyHitPoint : MonoBehaviour {
             HitPoints = HitPoints - collision.gameObject.GetComponent<ProjectileScript>().Damage;
             if (HitPoints <= 0)
             {
+                Debug.Log("Score: " + GlobalManagement.Score);
                 var exp = Instantiate(Explosion, transform.position, Quaternion.identity);
                 exp.transform.localScale = exp.transform.localScale * gameObject.GetComponent<Renderer>().bounds.size.x * 0.75f;
                 Destroy(gameObject);

@@ -17,8 +17,17 @@ public class UIcontrols : MonoBehaviour
     //Start button code
     protected void Start()
     {
-
         HowtoplayCanvas.enabled = false;
+        try
+        {
+            GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
+            GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
+            GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
         PauseCanvas.enabled = false;
@@ -39,19 +48,6 @@ public class UIcontrols : MonoBehaviour
     public void Options()
     {
         OptionsCanvas.enabled = !OptionsCanvas.enabled;
-        GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
-        GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
-        GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
-        if (PlayerPrefs.GetInt("Vibration") == 1)
-        {
-            vibratecheck = true;
-            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = true;
-        }
-        else
-        {
-            vibratecheck = false;
-            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
-        }
     }
 
     //howtoplay button code
@@ -63,21 +59,12 @@ public class UIcontrols : MonoBehaviour
     //back button code
     public void Menu()
     {
-        SaveLoad.Save();
         SceneManager.LoadScene(0);
     }
 
     public void Quit()
     {
-        if (SceneManager.GetActiveScene().name == "Menu")
-        {
-            //TODO: Comfirm quite canvas
-            Application.Quit();
-        }
-        else if (SceneManager.GetActiveScene().name == "Space")
-        {
-            Pause();
-        }
+        Application.Quit();
     }
 
     //resume button code
@@ -115,18 +102,24 @@ public class UIcontrols : MonoBehaviour
     void Update()
     {
         if (PauseCanvas.enabled)
-        {
+        { 
             Time.timeScale = 0;
         }
-
+        
         if (!PauseCanvas.enabled)
         {
             Time.timeScale = 1;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (PlayerPrefs.GetInt("Vibration") == 1)
         {
-            Quit();
+            vibratecheck = true;
+            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = true;
+        }
+        else
+        {
+            vibratecheck = false;
+            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
         }
     }
 
