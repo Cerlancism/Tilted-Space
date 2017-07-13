@@ -27,9 +27,9 @@ public class GlobalManagement : MonoBehaviour
         }
         if (PlayerPrefs.HasKey("MasterVol"))
         {
-            PlayerPrefs.GetFloat("MasterVol");
-            PlayerPrefs.GetFloat("MusicVol");
-            PlayerPrefs.GetFloat("SFXVol");
+            Master.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVol"));
+            Master.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVol"));
+            Master.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVol"));
         }
     }
 

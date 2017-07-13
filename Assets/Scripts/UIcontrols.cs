@@ -18,16 +18,6 @@ public class UIcontrols : MonoBehaviour
     protected void Start()
     {
         HowtoplayCanvas.enabled = false;
-        try
-        {
-            GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
-            GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
-            GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
-        }
-        catch (System.Exception e)
-        {
-            Debug.Log(e);
-        }
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
         PauseCanvas.enabled = false;
@@ -48,6 +38,9 @@ public class UIcontrols : MonoBehaviour
     public void Options()
     {
         OptionsCanvas.enabled = !OptionsCanvas.enabled;
+        GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
+        GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
+        GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
     }
 
     //howtoplay button code
@@ -102,10 +95,10 @@ public class UIcontrols : MonoBehaviour
     void Update()
     {
         if (PauseCanvas.enabled)
-        { 
+        {
             Time.timeScale = 0;
         }
-        
+
         if (!PauseCanvas.enabled)
         {
             Time.timeScale = 1;
@@ -120,6 +113,11 @@ public class UIcontrols : MonoBehaviour
         {
             vibratecheck = false;
             GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
         }
     }
 
