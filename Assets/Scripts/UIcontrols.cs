@@ -17,6 +17,7 @@ public class UIcontrols : MonoBehaviour
     //Start button code
     protected void Start()
     {
+
         HowtoplayCanvas.enabled = false;
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
@@ -41,6 +42,16 @@ public class UIcontrols : MonoBehaviour
         GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
         GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
         GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
+        if (PlayerPrefs.GetInt("Vibration") == 1)
+        {
+            vibratecheck = true;
+            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = true;
+        }
+        else
+        {
+            vibratecheck = false;
+            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
+        }
     }
 
     //howtoplay button code
@@ -52,12 +63,21 @@ public class UIcontrols : MonoBehaviour
     //back button code
     public void Menu()
     {
+        SaveLoad.Save();
         SceneManager.LoadScene(0);
     }
 
     public void Quit()
     {
-        Application.Quit();
+        if (SceneManager.GetActiveScene().name == "Menu")
+        {
+            //TODO: Comfirm quite canvas
+            Application.Quit();
+        }
+        else if (SceneManager.GetActiveScene().name == "Space")
+        {
+            Pause();
+        }
     }
 
     //resume button code
@@ -102,17 +122,6 @@ public class UIcontrols : MonoBehaviour
         if (!PauseCanvas.enabled)
         {
             Time.timeScale = 1;
-        }
-
-        if (PlayerPrefs.GetInt("Vibration") == 1)
-        {
-            vibratecheck = true;
-            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = true;
-        }
-        else
-        {
-            vibratecheck = false;
-            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
