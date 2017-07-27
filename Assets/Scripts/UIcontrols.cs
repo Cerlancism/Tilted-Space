@@ -11,13 +11,13 @@ public class UIcontrols : MonoBehaviour
     public Canvas OptionsCanvas;
     public Canvas CreditsCanvas;
     public Canvas DeathCanvas;
-    private bool paused = false;
-    public bool vibratecheck;
+
+    public static bool vibratecheck = true;
+    public static bool useRoll = false;
 
     //Start button code
     protected void Start()
     {
-
         HowtoplayCanvas.enabled = false;
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
@@ -42,16 +42,8 @@ public class UIcontrols : MonoBehaviour
         GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
         GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
         GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
-        if (PlayerPrefs.GetInt("Vibration") == 1)
-        {
-            vibratecheck = true;
-            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = true;
-        }
-        else
-        {
-            vibratecheck = false;
-            GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = false;
-        }
+        GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = vibratecheck ? true : false;
+        GameObject.Find("EnableRoll").GetComponent<Toggle>().isOn = useRoll ? true : false;
     }
 
     //howtoplay button code
@@ -98,10 +90,26 @@ public class UIcontrols : MonoBehaviour
         if (GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn)
         {
             PlayerPrefs.SetInt("Vibration", 1);
+            vibratecheck = true;
         }
         else
         {
             PlayerPrefs.SetInt("Vibration", 0);
+            vibratecheck = false;
+        }
+    }
+
+    public void RollCheck()
+    {
+        if (GameObject.Find("EnableRoll").GetComponent<Toggle>().isOn)
+        {
+            PlayerPrefs.SetInt("Roll", 1);
+            useRoll = true;
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Roll", 0);
+            useRoll = false;
         }
     }
 

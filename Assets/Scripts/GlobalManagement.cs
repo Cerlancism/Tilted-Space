@@ -25,6 +25,8 @@ public class GlobalManagement : MonoBehaviour
             Master.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVol"));
             Master.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVol"));
             Master.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVol"));
+            UIcontrols.vibratecheck = PlayerPrefs.GetInt("Vibration") == 1 ? true : false;
+            UIcontrols.useRoll = PlayerPrefs.GetInt("Roll") == 1 ? true : false;
         }
     }
 
