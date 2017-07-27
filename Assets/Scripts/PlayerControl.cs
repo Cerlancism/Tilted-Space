@@ -76,7 +76,7 @@ public class PlayerControl : MonoBehaviour
             PlayerPrefs.GetFloat("MusicVol");
             PlayerPrefs.GetFloat("SFXVol");
         }
-
+        ControlType = UIcontrols.useRoll ? ControlOption.ROLL : ControlOption.SLIDE;
     }
 
     protected void Update()
@@ -277,7 +277,7 @@ public class PlayerControl : MonoBehaviour
             // Play effects
             SFX.PlayOneShot(ExplodeSFX, 0.8f);
             screenShake.ShakeCamera(0.05f, 1);
-            if(uicontrols.vibratecheck == true)
+            if(UIcontrols.vibratecheck == true)
             {
                 Handheld.Vibrate();
             }
