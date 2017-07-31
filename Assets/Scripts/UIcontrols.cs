@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GoogleMobileAds.Api;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,6 +7,9 @@ using UnityEngine.UI;
 
 public class UIcontrols : MonoBehaviour
 {
+    public static BannerView bannerView;
+    public static InterstitialAd interstitial;
+
     public Canvas PauseCanvas;
     public Canvas HowtoplayCanvas;
     public Canvas OptionsCanvas;
@@ -18,16 +22,24 @@ public class UIcontrols : MonoBehaviour
     //Start button code
     protected void Start()
     {
+        Time.timeScale = 1;
         HowtoplayCanvas.enabled = false;
         OptionsCanvas.enabled = false;
         CreditsCanvas.enabled = false;
         PauseCanvas.enabled = false;
         DeathCanvas.enabled = false;
+        RequestBanner();
+        if (SceneManager.GetActiveScene().name == "Space")
+        {
+            bannerView.Hide();
+            RequestInterstitial();
+        }
     }
 
     public void Startgame()
     {
         SceneManager.LoadScene(1);
+        bannerView.Hide();
     }
     //howtoplay button code
     public void Howtoplay()
@@ -55,6 +67,8 @@ public class UIcontrols : MonoBehaviour
     //back button code
     public void Menu()
     {
+        interstitial.Destroy();
+        bannerView.Destroy();
         SaveLoad.Save();
         SceneManager.LoadScene(0);
     }
@@ -70,6 +84,7 @@ public class UIcontrols : MonoBehaviour
         {
             Pause();
         }
+        bannerView.Show();
     }
 
     //resume button code
@@ -77,12 +92,23 @@ public class UIcontrols : MonoBehaviour
     {
         PauseCanvas.enabled = !PauseCanvas.enabled;
         Time.timeScale = 1;
+        bannerView.Hide();
     }
 
     //back button code
     public void Pause()
     {
         PauseCanvas.enabled = !PauseCanvas.enabled;
+        if (PauseCanvas.enabled)
+        {
+            Time.timeScale = 0;
+            bannerView.Show();
+        }
+        else
+        {
+            Time.timeScale = 1;
+            bannerView.Hide();
+        }
     }
 
     public void VibrateCheck()
@@ -117,25 +143,56 @@ public class UIcontrols : MonoBehaviour
     public void Die()
     {
         DeathCanvas.enabled = true;
+        if (interstitial.IsLoaded())
+        {
+            interstitial.Show();
+            bannerView.Destroy();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PauseCanvas.enabled)
-        {
-            Time.timeScale = 0;
-        }
-
-        if (!PauseCanvas.enabled)
-        {
-            Time.timeScale = 1;
-        }
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Quit();
         }
+    }
+
+    private void RequestBanner()
+    {
+#if UNITY_EDITOR
+        string adUnitId = "ca-app-pub-2193747020490389/2344362827";
+#elif UNITY_ANDROID
+            string adUnitId = "ca-app-pub-2193747020490389/2344362827";
+#elif UNITY_IPHONE
+            string adUnitId = "ca-app-pub-2193747020490389/2344362827";
+#else
+            string adUnitId = "ca-app-pub-2193747020490389/8726772496";
+#endif
+        // Create a 320x50 banner at the top of the screen.
+        bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Bottom);
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the banner with the request.
+        bannerView.LoadAd(request);
+    }
+
+    private void RequestInterstitial()
+    {
+#if UNITY_ANDROID
+        string adUnitId = "ca-app-pub-2193747020490389/8726772496";
+#elif UNITY_IPHONE
+        string adUnitId = "ca-app-pub-2193747020490389/8726772496";
+#else
+        string adUnitId = "ca-app-pub-2193747020490389/8726772496";
+#endif
+        // Initialize an InterstitialAd.
+        interstitial = new InterstitialAd(adUnitId);
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the interstitial with the request.
+        interstitial.LoadAd(request);
     }
 
 }
