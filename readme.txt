@@ -21,3 +21,8 @@ Chen Yu p1626063 (Github: scheduleX)
 - SFX and Feedbacks
 - Player Shooting
 - Enemy Destruction
+
+TODO:
+Quit comfirmation canvas for app exit
+
+App ID: ca-app-pub-2193747020490389~3270599555
