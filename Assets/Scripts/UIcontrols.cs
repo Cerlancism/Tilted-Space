@@ -163,7 +163,6 @@ public class UIcontrols : MonoBehaviour
         }
         extralife = true;
         DeathCanvas.enabled = false;
-        Time.timeScale = 1;
     }
 
     // Update is called once per frame

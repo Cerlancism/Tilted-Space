@@ -289,7 +289,7 @@ public class PlayerControl : MonoBehaviour
             // Die if necessary
             if (health <= 1)
             {
-                Time.timeScale = 0;
+                uicontrols.Pause();
                 uicontrols.Die();
                 //Extra life
                 if (uicontrols.extralife == true)
