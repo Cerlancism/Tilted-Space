@@ -18,6 +18,7 @@ public class UIcontrols : MonoBehaviour
 
     public static bool vibratecheck = true;
     public static bool useRoll = false;
+    public bool extralife;
 
     //Start button code
     protected void Start()
@@ -28,6 +29,8 @@ public class UIcontrols : MonoBehaviour
         CreditsCanvas.enabled = false;
         PauseCanvas.enabled = false;
         DeathCanvas.enabled = false;
+        extralife = false;
+
         RequestBanner();
         if (SceneManager.GetActiveScene().name == "Space")
         {
@@ -154,6 +157,18 @@ public class UIcontrols : MonoBehaviour
             interstitial.Show();
             bannerView.Destroy();
         }
+    }
+
+    //extra life code 
+    public void extraLife()
+    {
+        if (interstitial.IsLoaded())
+        {
+            interstitial.Show();
+            bannerView.Destroy();
+        }
+        extralife = true;
+        DeathCanvas.enabled = false;
     }
 
     // Update is called once per frame

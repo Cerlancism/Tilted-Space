@@ -287,10 +287,15 @@ public class PlayerControl : MonoBehaviour
             healthGUI[health].enabled = false;
 
             // Die if necessary
-            if (health <= 0)
+            if (health <= 1)
             {
+                uicontrols.Pause();
                 uicontrols.Die();
-                Destroy(gameObject);
+                //Extra life
+                if (uicontrols.extralife == true)
+                {
+                    GameObject.Find("ExtralifeButton").SetActive(false);
+                }
             }
         }
     }
