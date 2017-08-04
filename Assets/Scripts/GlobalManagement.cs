@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.SocialPlatforms;
+using GooglePlayGames;
 
 public class GlobalManagement : MonoBehaviour
 {
@@ -16,6 +18,8 @@ public class GlobalManagement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         SaveLoad.Load();
         SaveLoad.CurrentGameData.Currentscore = 0;
         GameObject.Find("Highscore").GetComponent<Text>().text = "Highscore: " + SaveLoad.CurrentGameData.Highscore.ToString().PadLeft(6, '0');
@@ -28,6 +32,15 @@ public class GlobalManagement : MonoBehaviour
             UIcontrols.vibratecheck = PlayerPrefs.GetInt("Vibration") == 1 ? true : false;
             UIcontrols.useRoll = PlayerPrefs.GetInt("Roll") == 1 ? true : false;
         }
+
+        StartPlayGames();
+    }
+
+    private void StartPlayGames()
+    {
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+        Social.localUser.Authenticate((bool success) => { });
     }
 
     // Update is called once per frame

@@ -47,7 +47,7 @@ public class UIcontrols : MonoBehaviour
         HowtoplayCanvas.enabled = !HowtoplayCanvas.enabled;
     }
 
-    //howtoplay2 button code
+    //options button code
     public void Options()
     {
         OptionsCanvas.enabled = !OptionsCanvas.enabled;
@@ -58,10 +58,16 @@ public class UIcontrols : MonoBehaviour
         GameObject.Find("EnableRoll").GetComponent<Toggle>().isOn = useRoll ? true : false;
     }
 
-    //howtoplay button code
+    //credits button code
     public void Credits()
     {
         CreditsCanvas.enabled = !CreditsCanvas.enabled;
+    }
+
+    //leaderboard button code
+    public void Leaderboard()
+    {
+        Social.Active.ShowLeaderboardUI();
     }
 
     //back button code
