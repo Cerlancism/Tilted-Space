@@ -2,7 +2,8 @@ Team Name: Kenzer Lancer Games
 Github: https://github.com/scheduleX/Tilted-Space
 
 Beta Test Link: https://play.google.com/apps/testing/com.KenzerLancer.TiltedSpace
-Beta Test Feedback and remarks: TiltedSpaceBetaTestReponeseLogs.xlsx
+Beta Test Feedback form: https://docs.google.com/forms/d/e/1FAIpQLSdTIXltwUjXfWya0XTdzTOMwqbG6Ohn02mn8FNtu6zYepJJXg/viewform
+Beta Test Feedback Data and Remarks: TiltedSpaceBetaTestReponeseLogs.xlsx
 
 Roles:
 Kenze Wee Hon-ming p1625905 (Github: MonarchDoge)

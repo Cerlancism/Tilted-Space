@@ -9,6 +9,7 @@ public class SceneLoader : MonoBehaviour {
     public void LoadScene()
     {
         SaveLoad.Save();
+        UIcontrols.bannerView.Destroy();
         SceneManager.LoadScene(scene);
     }
 }

@@ -141,8 +141,12 @@ public class UIcontrols : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Menu")
         {
-            //TODO: Comfirm quite canvas
-            Application.Quit();
+            //TODO: Comfirm quit canvas
+            HowtoplayCanvas.enabled = false;
+            OptionsCanvas.enabled = false;
+            CreditsCanvas.enabled = false;
+            PauseCanvas.enabled = false;
+            DeathCanvas.enabled = false;
         }
         else if (SceneManager.GetActiveScene().name == "Space")
         {
@@ -207,6 +211,14 @@ public class UIcontrols : MonoBehaviour
     public void Die()
     {
         DeathCanvas.enabled = true;
+        if (!extralife)
+        {
+            Pause();
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
     }
 
     //extra life code 
