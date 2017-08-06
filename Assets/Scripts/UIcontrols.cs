@@ -89,10 +89,19 @@ public class UIcontrols : MonoBehaviour
     //back button code
     public void Menu()
     {
+        SaveScore();
         interstitial.Destroy();
         bannerView.Destroy();
         SaveLoad.Save();
         SceneManager.LoadScene(0);
+    }
+
+    void SaveScore()
+    {
+        if (Social.localUser.authenticated)
+        {
+            Social.ReportScore(SaveLoad.CurrentGameData.Currentscore, GPGSIds.leaderboard_highscore, (bool success) => { });
+        }
     }
 
     public void Quit()
