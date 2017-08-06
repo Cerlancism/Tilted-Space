@@ -48,7 +48,7 @@ public class GameData
         set
         {
             bulletsDestroyed = value;
-            if (bulletsDestroyed > 1)
+            if (bulletsDestroyed > 25)
             {
                 if (Social.localUser.authenticated)
                 {
