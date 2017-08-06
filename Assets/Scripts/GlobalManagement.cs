@@ -22,6 +22,7 @@ public class GlobalManagement : MonoBehaviour
 
         SaveLoad.Load();
         SaveLoad.CurrentGameData.Currentscore = 0;
+        SaveLoad.CurrentGameData.BulletsDestroyed = 0;
         GameObject.Find("Highscore").GetComponent<Text>().text = "Highscore: " + SaveLoad.CurrentGameData.Highscore.ToString().PadLeft(6, '0');
 
         if (PlayerPrefs.HasKey("MasterVol"))

@@ -24,7 +24,7 @@
 
 public static class GPGSIds
 {
-        public const string leaderboard_highscore = "CgkI2ujL4rkWEAIQAQ"; // <GPGSID>
-
+    public const string leaderboard_highscore = "CgkI2ujL4rkWEAIQAQ";
+    public const string achievement_tenBulletsDestroyed = "CgkI2ujL4rkWEAIQAg"; 
 }
 
