@@ -33,6 +33,10 @@ public class GlobalManagement : MonoBehaviour
             UIcontrols.vibratecheck = PlayerPrefs.GetInt("Vibration") == 1 ? true : false;
             UIcontrols.useRoll = PlayerPrefs.GetInt("Roll") == 1 ? true : false;
         }
+        else
+        {
+            Camera.main.GetComponent<UIcontrols>().ResetOptions();
+        }
 
         StartPlayGames();
     }

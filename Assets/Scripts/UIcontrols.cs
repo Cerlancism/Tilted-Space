@@ -62,6 +62,22 @@ public class UIcontrols : MonoBehaviour
         GameObject.Find("EnableRoll").GetComponent<Toggle>().isOn = useRoll ? true : false;
     }
 
+    public void ResetOptions()
+    {
+        PlayerPrefs.SetFloat("MasterVol", 0);
+        PlayerPrefs.SetFloat("MusicVol", 0);
+        PlayerPrefs.SetFloat("SFXVol", 0);
+        PlayerPrefs.SetInt("Vibration", 1);
+        PlayerPrefs.SetInt("Roll", 0);
+        vibratecheck = true;
+        useRoll = false;
+        GameObject.Find("MasterSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MasterVol");
+        GameObject.Find("MusicSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVol");
+        GameObject.Find("SFXSlider").GetComponent<Slider>().value = PlayerPrefs.GetFloat("SFXVol");
+        GameObject.Find("EnableVibration").GetComponent<Toggle>().isOn = vibratecheck ? true : false;
+        GameObject.Find("EnableRoll").GetComponent<Toggle>().isOn = useRoll ? true : false;
+    }
+
     //credits button code
     public void Credits()
     {
@@ -81,9 +97,26 @@ public class UIcontrols : MonoBehaviour
         }
     }
 
+    public void Achievements()
+    {
+        if (PlayGamesPlatform.Instance.IsAuthenticated())
+        {
+            ShowAchievements();
+        }
+        else
+        {
+            Social.localUser.Authenticate((bool success) => ShowAchievements());
+        }
+    }
+
     void ShowLeaderboard()
     {
         Social.Active.ShowLeaderboardUI();
+    }
+
+    void ShowAchievements()
+    {
+        Social.Active.ShowAchievementsUI();
     }
 
     //back button code
@@ -174,15 +207,10 @@ public class UIcontrols : MonoBehaviour
     public void Die()
     {
         DeathCanvas.enabled = true;
-        if (interstitial.IsLoaded())
-        {
-            interstitial.Show();
-            bannerView.Destroy();
-        }
     }
 
     //extra life code 
-    public void extraLife()
+    public void ExtraLife()
     {
         if (interstitial.IsLoaded())
         {

@@ -208,6 +208,14 @@ public class PlayerControl : MonoBehaviour
         //Fire Rocket if shaked
         if (Shaked && CanFireRocket())
         {
+            FireRocket();
+        }
+    }
+
+    public void FireRocket()
+    {
+        if (CanFireRocket())
+        {
             rocketCurrentCD = RocketCooldown;
             SFX.PlayOneShot(RocketLaunchSFX, 1f);
             Instantiate(Rocket, Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0, 10)), Quaternion.identity);
@@ -284,10 +292,13 @@ public class PlayerControl : MonoBehaviour
 
             // Decrease health
             health--;
-            healthGUI[health].enabled = false;
+            if (health >= 0)
+            {
+                healthGUI[health].enabled = false;
+            }
 
             // Die if necessary
-            if (health <= 1)
+            if (health <= 0)
             {
                 uicontrols.Pause();
                 uicontrols.Die();
