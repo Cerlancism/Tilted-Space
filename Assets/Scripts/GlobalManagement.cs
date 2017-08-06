@@ -38,7 +38,6 @@ public class GlobalManagement : MonoBehaviour
 
     private void StartPlayGames()
     {
-        PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
         Social.localUser.Authenticate((bool success) => { });
     }

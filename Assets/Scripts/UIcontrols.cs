@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using GooglePlayGames;
 
 public class UIcontrols : MonoBehaviour
 {
@@ -69,6 +70,18 @@ public class UIcontrols : MonoBehaviour
 
     //leaderboard button code
     public void Leaderboard()
+    {
+        if (PlayGamesPlatform.Instance.IsAuthenticated())
+        {
+            ShowLeaderboard();
+        }
+        else
+        {
+            Social.localUser.Authenticate((bool success) => ShowLeaderboard());
+        }
+    }
+
+    void ShowLeaderboard()
     {
         Social.Active.ShowLeaderboardUI();
     }
