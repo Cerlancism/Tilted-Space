@@ -12,7 +12,6 @@ public class EnemyHitPoint : MonoBehaviour {
 	// === Private Variables ====
 	
 	
-	
 	// Use this for initialization
 	void Start () 
 	{
@@ -32,6 +31,11 @@ public class EnemyHitPoint : MonoBehaviour {
             HitPoints = HitPoints - collision.gameObject.GetComponent<ProjectileScript>().Damage;
             if (HitPoints <= 0)
             {
+                if (gameObject.GetComponent<EnemyProjectile>())
+                {
+                    SaveLoad.CurrentGameData.BulletsDestroyed++;
+                }
+
                 var exp = Instantiate(Explosion, transform.position, Quaternion.identity);
                 exp.transform.localScale = exp.transform.localScale * gameObject.GetComponent<Renderer>().bounds.size.x * 0.75f;
                 Destroy(gameObject);
@@ -47,11 +51,15 @@ public class EnemyHitPoint : MonoBehaviour {
             HitPoints = HitPoints - collision.gameObject.GetComponent<ProjectileScript>().Damage;
             if (HitPoints <= 0)
             {
+                if (gameObject.GetComponent<EnemyProjectile>())
+                {
+                    SaveLoad.CurrentGameData.BulletsDestroyed++;
+                }
+
                 var exp = Instantiate(Explosion, transform.position, Quaternion.identity);
                 exp.transform.localScale = exp.transform.localScale * gameObject.GetComponent<Renderer>().bounds.size.x * 0.75f;
                 Destroy(gameObject);
             }
         }
     }
-
 }
