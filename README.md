@@ -6,12 +6,12 @@ Github: https://github.com/scheduleX/Tilted-Space
 
 ## Roles:
 ### Kenze Wee Hon-ming (Github: MonarchDoge)
-####CA2
+#### CA2
 - User Interface
 - Player Settings
 - Camera Movement
 - Start Screen
-####CA3
+#### CA3
 - Team Logo
 - Interstitial Ads Reward
 - Feedback survey and logs
@@ -19,24 +19,24 @@ Github: https://github.com/scheduleX/Tilted-Space
 
 
 ### Lim Ding Wen (Github: IgnisIncendio)
-####CA2
+#### CA2
 - Level Design
 - Enemy Spawning
 - Enemy Mechanics
 - Player Health
-####CA3
+#### CA3
 - Leaderboard
 - Achievements
 - Bullet Trail
 
 
 ### Chen Yu (Github: scheduleX)
-####CA2
+#### CA2
 - Player Controls
 - SFX and Feedbacks
 - Player Shooting
 - Enemy Destruction
-####CA3
+#### CA3
 - Player Pref Refinement and Reset
 - Serialisation
 - Banner and interstitial ads integration
